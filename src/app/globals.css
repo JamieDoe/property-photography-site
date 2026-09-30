@@ -1,26 +1,449 @@
 @import "tailwindcss";
 
+/*
+ * Design system: "Limestone & ink".
+ * Warm neutrals carry the page so the photography keeps its colour.
+ * Rust is reserved for hover and small moments.
+ */
+@theme {
+  --color-limestone: #f3f0ea;
+  --color-stone: #e9e4da;
+  --color-paper: #fbfaf7;
+  --color-rule: #d2cabc;
+  --color-rule-soft: #e1dacd;
+  --color-rule-strong: #bdb4a5;
+  --color-taupe: #5e584d;
+  --color-body: #4e493f;
+  --color-muted: #6b6558;
+  --color-ink: #17150f;
+  --color-night: #0e0d0b;
+  --color-rust: #8c4322;
+  --color-sand: #c9c1b2;
+  --color-sand-muted: #b8af9f;
+  --color-ash: #a9a091;
+  --color-line-dark: #3a362e;
+  --color-apricot: #e7b08f;
+
+  --font-sans: var(--font-archivo), system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  --font-serif: var(--font-instrument), Georgia, "Times New Roman", serif;
+
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --header-h: 64px;
+  --gutter: 20px;
+  --focus: var(--color-rust);
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (min-width: 48rem) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --gutter: 40px;
   }
 }
 
+@media (min-width: 64rem) {
+  :root {
+    --header-h: 96px;
+    --gutter: 80px;
+  }
+}
+
+html {
+  background: var(--color-limestone);
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-limestone);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--color-ink);
+  color: var(--color-limestone);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Dark surfaces switch the focus ring to limestone so it stays visible. */
+.surface-dark {
+  --focus: var(--color-limestone);
+}
+
+/* ---------- Typography ---------- */
+
+@utility display {
+  font-stretch: 115%;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.93;
+  text-wrap: balance;
+}
+
+/* The serif italic "emotional half" of a headline. Sized relative to its display parent. */
+@utility accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: 100%;
+  letter-spacing: -0.015em;
+}
+
+/* Inside a display headline the serif accent runs ~10% larger to match the grotesk's x-height. */
+.display > .accent {
+  font-size: 1.1em;
+}
+
+@utility eyebrow {
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  @media (min-width: 64rem) {
+    font-size: 12px;
+  }
+}
+
+@utility body-copy {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-body);
+  text-wrap: pretty;
+  @media (min-width: 64rem) {
+    font-size: 17px;
+  }
+}
+
+@utility card-title {
+  font-weight: 600;
+  font-stretch: 112%;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+@utility wordmark {
+  font-weight: 700;
+  font-stretch: 125%;
+  letter-spacing: 0.2em;
+  line-height: 1;
+}
+
+/*
+ * Fluid display sizes (390px mobile frame → 1440px desktop frame).
+ * Scaled to the column the headline sits in, so the longest words
+ * ("photography", "photographer.") never overflow at any width.
+ */
+@utility text-hero {
+  font-size: min(14vw, 6rem);
+  @media (min-width: 64rem) {
+    font-size: min(9.4vw, 8.5rem);
+  }
+}
+@utility text-title {
+  font-size: min(12.5vw, 5.5rem);
+  @media (min-width: 64rem) {
+    font-size: min(7.4vw, 7.25rem);
+  }
+}
+@utility text-section {
+  font-size: clamp(2.6rem, 1.5rem + 4.4vw, 5.25rem);
+}
+@utility text-section-sm {
+  font-size: clamp(2.4rem, 1.5rem + 3.2vw, 4.5rem);
+}
+@utility text-subsection {
+  font-size: clamp(2.2rem, 1.4rem + 2.8vw, 4rem);
+}
+@utility text-cta {
+  font-size: clamp(2.9rem, 1.5rem + 5.4vw, 6.5rem);
+}
+@utility text-card-lg {
+  font-size: clamp(1.75rem, 1.2rem + 1.5vw, 2.5rem);
+}
+
+/* ---------- Layout ---------- */
+
+@utility gutter {
+  padding-inline: var(--gutter);
+}
+
+@utility bleed-right {
+  @media (min-width: 64rem) {
+    margin-right: calc(var(--gutter) * -1);
+  }
+}
+
+@utility section-y {
+  padding-block: 80px;
+  @media (min-width: 64rem) {
+    padding-block: 140px;
+  }
+}
+
+/* ---------- Actions ---------- */
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 0 26px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid var(--color-ink);
+    background: var(--color-ink);
+    color: var(--color-limestone);
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .btn:hover {
+    background: var(--color-rust);
+    border-color: var(--color-rust);
+    color: #fff;
+  }
+  .btn:disabled {
+    cursor: progress;
+    opacity: 0.7;
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--color-ink);
+  }
+  .btn-outline:hover {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-limestone);
+  }
+  .btn-light {
+    background: var(--color-limestone);
+    color: var(--color-ink);
+    border-color: var(--color-limestone);
+  }
+  .btn-light:hover {
+    background: #fff;
+    border-color: #fff;
+    color: var(--color-ink);
+  }
+  .btn-light-outline {
+    background: transparent;
+    color: var(--color-limestone);
+    border-color: rgb(243 240 234 / 0.65);
+  }
+  .btn-light-outline:hover {
+    background: var(--color-limestone);
+    color: var(--color-ink);
+    border-color: var(--color-limestone);
+  }
+  .btn-sm {
+    min-height: 44px;
+    padding: 0 20px;
+  }
+
+  .text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 5px;
+    transition: color 0.2s;
+  }
+  .text-link:hover {
+    color: var(--color-rust);
+  }
+  .surface-dark .text-link:hover {
+    color: var(--color-apricot);
+  }
+
+  .chip {
+    min-height: 44px;
+    padding: 0 20px;
+    border: 1px solid var(--color-rule-strong);
+    background: transparent;
+    color: var(--color-ink);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      background-color 0.2s,
+      border-color 0.2s;
+  }
+  .chip:hover {
+    border-color: var(--color-ink);
+  }
+  .chip[aria-pressed="true"] {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-limestone);
+    font-weight: 600;
+  }
+
+  .prose-link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .prose-link:hover {
+    color: var(--color-rust);
+  }
+}
+
+/* ---------- Motion ---------- */
+
+/* Hero settles from a slight zoom. */
+@keyframes settle {
+  from {
+    transform: scale(1.07);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.animate-settle {
+  animation: settle 18s var(--ease-out-soft) both;
+}
+
+/* Headlines rise into place on load. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-rise {
+  animation: rise 1.1s var(--ease-out-soft) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade {
+  animation: fade-in 0.35s ease both;
+}
+
+/* Images scale 1.5% on hover. */
+.lift img {
+  transition: transform 0.6s var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .lift:hover img {
+    transform: scale(1.015);
+  }
+}
+
+/*
+ * Scroll reveal: progressive enhancement via scroll-driven animations.
+ * Browsers without support simply show the content; no JavaScript involved.
+ */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+}
+
+@media print {
+  .reveal,
+  .animate-rise {
+    animation: none;
+  }
+}
+
+/* Page transitions (React <ViewTransition> on route change). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    animation: none;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Horizontal snap rails (mobile image sequences). Layered so utilities like lg:hidden win. */
+@layer components {
+  .rail {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+  .rail > * {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+}
+
+/* Native <dialog> lightbox. */
+dialog.lightbox {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--color-night);
+  color: var(--color-limestone);
+}
+dialog.lightbox::backdrop {
+  background: var(--color-night);
+}
+
+/* FAQ disclosure */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] > summary .faq-icon {
+  transform: rotate(45deg);
 }
