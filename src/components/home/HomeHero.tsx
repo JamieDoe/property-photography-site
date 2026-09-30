@@ -58,9 +58,15 @@ export function HomeHero({ headline, intro, slides }: HomeHeroProps) {
           ) : null,
         )}
       </div>
+      {/* Legibility: a soft progressive blur behind the text, fading out towards the top of the image… */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(8,8,10,.5)_0,rgba(8,8,10,0)_18%,rgba(8,8,10,0)_38%,rgba(8,8,10,.72)_100%)] lg:bg-[linear-gradient(180deg,rgba(8,8,10,.5)_0,rgba(8,8,10,0)_20%,rgba(8,8,10,0)_42%,rgba(8,8,10,.66)_100%)]"
+        className="absolute inset-x-0 bottom-0 -z-10 h-[55%] backdrop-blur-[6px] [mask-image:linear-gradient(to_top,#000_0%,#000_25%,transparent_100%)] lg:h-[45%] lg:backdrop-blur-[5px] lg:[mask-image:linear-gradient(to_top,#000_0%,#000_20%,transparent_100%),linear-gradient(to_right,#000_0%,#000_45%,transparent_85%)] lg:[mask-composite:intersect]"
+      />
+      {/* …plus a gradient: dark at the top for the header, deeper at the bottom and left behind the headline. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(8,8,10,.5)_0,rgba(8,8,10,0)_18%,rgba(8,8,10,.08)_38%,rgba(8,8,10,.8)_100%)] lg:bg-[linear-gradient(180deg,rgba(8,8,10,.5)_0,rgba(8,8,10,0)_20%,rgba(8,8,10,.06)_42%,rgba(8,8,10,.74)_100%),linear-gradient(90deg,rgba(8,8,10,.35)_0,rgba(8,8,10,0)_60%)]"
       />
 
       <div className="gutter grid w-full gap-y-8 pb-9 lg:grid-cols-12 lg:items-end lg:gap-x-6 lg:pb-[76px]">
