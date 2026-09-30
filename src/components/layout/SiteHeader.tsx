@@ -40,17 +40,26 @@ export function SiteHeader() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-40 isolate transition-[background-color,color,border-color] duration-300 ${
-          solid
-            ? "border-b border-rule bg-limestone text-ink"
-            : "surface-dark border-b border-transparent bg-transparent text-limestone"
+        className={`fixed inset-x-0 top-0 z-40 isolate transition-colors duration-300 ${
+          solid ? "text-ink" : "surface-dark text-limestone"
         }`}
       >
-        {/* Over photography: a blur behind the bar that tapers away from top to bottom. */}
+        {/*
+          Over photography: a blur behind the bar that tapers away from top to bottom.
+          Unmounted (not just faded) once the bar is solid: WebKit can ignore opacity on
+          backdrop-filter elements, which would paint the blur over the solid background.
+        */}
+        {!solid && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[calc(100%+32px)] backdrop-blur-[10px] [mask-image:linear-gradient(to_bottom,#000_0%,#000_35%,transparent_100%)]"
+          />
+        )}
+        {/* Solid limestone bar, its own layer above the blur so nothing can cover it. */}
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute inset-x-0 top-0 -z-10 h-[calc(100%+32px)] backdrop-blur-[10px] transition-opacity duration-300 [mask-image:linear-gradient(to_bottom,#000_0%,#000_35%,transparent_100%)] ${
-            solid ? "opacity-0" : "opacity-100"
+          className={`pointer-events-none absolute inset-0 -z-10 border-b border-rule bg-limestone transition-opacity duration-300 ${
+            solid ? "opacity-100" : "opacity-0"
           }`}
         />
         <div className="gutter flex h-[var(--header-h)] items-center justify-between">
