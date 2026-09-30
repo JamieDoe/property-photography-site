@@ -40,12 +40,19 @@ export function SiteHeader() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-40 transition-[background-color,color,border-color] duration-300 ${
+        className={`fixed inset-x-0 top-0 z-40 isolate transition-[background-color,color,border-color] duration-300 ${
           solid
             ? "border-b border-rule bg-limestone text-ink"
             : "surface-dark border-b border-transparent bg-transparent text-limestone"
         }`}
       >
+        {/* Over photography: a blur behind the bar that tapers away from top to bottom. */}
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-x-0 top-0 -z-10 h-[calc(100%+32px)] backdrop-blur-[10px] transition-opacity duration-300 [mask-image:linear-gradient(to_bottom,#000_0%,#000_35%,transparent_100%)] ${
+            solid ? "opacity-0" : "opacity-100"
+          }`}
+        />
         <div className="gutter flex h-[var(--header-h)] items-center justify-between">
           <Link href="/" aria-label={`${site.legalName}, home`} className="-my-2 py-2">
             <Wordmark />
